@@ -1,7 +1,10 @@
 #include <furi.h>
+#include <furi_hal.h>
+
 #include <gui/gui.h>
 #include <input/input.h>
 #include <stdlib.h>
+#include <notification/notification_messages.h>
 
 typedef struct {
     //    +-----x
@@ -264,6 +267,9 @@ static void snake_game_move_snake(SnakeState* const snake_state, Point const nex
 }
 
 static void snake_game_process_game_step(SnakeState* const snake_state) {
+
+    NotificationApp* notification = furi_record_open("notification");
+
     if(snake_state->state == GameStateGameOver) {
         return;
     }
@@ -299,6 +305,11 @@ static void snake_game_process_game_step(SnakeState* const snake_state) {
     bool eatFruit = (next_step.x == snake_state->fruit.x) && (next_step.y == snake_state->fruit.y);
     if(eatFruit) {
         snake_state->len++;
+        // and vibro!
+        notification_message(notification, &sequence_set_vibro_on);
+        delay(250);
+        notification_message(notification, &sequence_reset_vibro);
+
         if(snake_state->len >= MAX_SNAKE_LEN) {
             snake_state->state = GameStateGameOver;
             return;
