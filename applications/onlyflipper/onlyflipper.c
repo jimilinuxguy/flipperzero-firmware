@@ -55,7 +55,7 @@ const OFDialogScreen of_screens[] = {
 
 const size_t of_screens_count = sizeof(of_screens) / sizeof(OFDialogScreen);
 
-int32_t only_flipper_app(void* p) {
+int32_t onlyflipper_app(void* p) {
     DialogsApp* dialogs = furi_record_open("dialogs");
     DialogMessage* message = dialog_message_alloc();
 

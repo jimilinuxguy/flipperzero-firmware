@@ -46,6 +46,7 @@ extern int32_t battery_test_app(void* p);
 // Plugins
 extern int32_t music_player_app(void* p);
 extern int32_t snake_game_app(void* p);
+extern int32_t about_settings_app(void* p);
 
 // On system start hooks declaration
 extern void bt_on_system_start();
@@ -64,7 +65,6 @@ extern int32_t notification_settings_app(void* p);
 extern int32_t storage_settings_app(void* p);
 extern int32_t bt_settings_app(void* p);
 extern int32_t desktop_settings_app(void* p);
-extern int32_t about_settings_app(void* p);
 extern int32_t onlyflipper_app(void* p);
 extern int32_t power_settings_app(void* p);
 extern int32_t system_settings_app(void* p);
@@ -218,6 +218,10 @@ const FlipperApplication FLIPPER_PLUGINS[] = {
 #ifdef APP_SNAKE_GAME
     {.app = snake_game_app, .name = "Snake Game", .stack_size = 1024, .icon = &A_Plugins_14},
 #endif
+
+#ifdef APP_ONLYFLIPPER
+    {.app = onlyflipper_app, .name = "OnlyFlipper", .stack_size = 1024, .icon = NULL},
+#endif
 };
 
 const size_t FLIPPER_PLUGINS_COUNT = sizeof(FLIPPER_PLUGINS) / sizeof(FlipperApplication);
@@ -323,10 +327,6 @@ const FlipperApplication FLIPPER_SETTINGS_APPS[] = {
 
 #ifdef APP_ABOUT
     {.app = about_settings_app, .name = "About", .stack_size = 1024, .icon = NULL},
-#endif
-
-#ifdef APP_ONLYFLIPPER
-    {.app = about_onlyflipper, .name = "OnlyFlipper", .stack_size = 1024, .icon = NULL},
 #endif
 };
 

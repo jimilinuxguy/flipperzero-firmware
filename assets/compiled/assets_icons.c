@@ -668,6 +668,8 @@ const uint8_t* const _I_iButtonKey_49x44[] = {_I_iButtonKey_49x44_0};
 
 const Icon I_Certification1_103x23 = {.width=103,.height=23,.frame_count=1,.frame_rate=0,.frames=_I_Certification1_103x23};
 const Icon I_Certification2_119x30 = {.width=119,.height=30,.frame_count=1,.frame_rate=0,.frames=_I_Certification2_119x30};
+const Icon I_OF1_119x50 = {.width=119,.height=50,.frame_count=1,.frame_rate=0,.frames=_I_OF1_119x50};
+const Icon I_OF2_119x50 = {.width=119,.height=50,.frame_count=1,.frame_rate=0,.frames=_I_OF2_119x50};
 const Icon A_Levelup1_128x64 = {.width=128,.height=64,.frame_count=11,.frame_rate=2,.frames=_A_Levelup1_128x64};
 const Icon A_Levelup2_128x64 = {.width=128,.height=64,.frame_count=11,.frame_rate=2,.frames=_A_Levelup2_128x64};
 const Icon I_125_10px = {.width=10,.height=10,.frame_count=1,.frame_rate=0,.frames=_I_125_10px};
