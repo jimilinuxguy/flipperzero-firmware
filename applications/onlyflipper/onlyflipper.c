@@ -6,7 +6,7 @@
 #include <m-string.h>
 #include <furi_hal_version.h>
 
-typedef DialogMessageButton (*AboutDialogScreen)(DialogsApp* dialogs, DialogMessage* message);
+typedef DialogMessageButton (*OFDialogScreen)(DialogsApp* dialogs, DialogMessage* message);
 
 // Screen 1
 static DialogMessageButton product_screen(DialogsApp* dialogs, DialogMessage* message) {
@@ -48,12 +48,12 @@ static DialogMessageButton icon2_screen(DialogsApp* dialogs, DialogMessage* mess
     return result;
 }
 
-const AboutDialogScreen about_screens[] = {
+const OFDialogScreen of_screens[] = {
     product_screen,
     icon1_screen,
     icon2_screen,};
 
-const size_t about_screens_count = sizeof(about_screens) / sizeof(AboutDialogScreen);
+const size_t of_screens_count = sizeof(of_screens) / sizeof(OFDialogScreen);
 
 int32_t only_flipper_app(void* p) {
     DialogsApp* dialogs = furi_record_open("dialogs");
@@ -74,13 +74,13 @@ int32_t only_flipper_app(void* p) {
     view_dispatcher_switch_to_view(view_dispatcher, empty_screen_index);
 
     while(1) {
-        if(screen_index >= about_screens_count - 1) {
+        if(screen_index >= of_screens_count - 1) {
             dialog_message_set_buttons(message, "Back", NULL, NULL);
         } else {
             dialog_message_set_buttons(message, "Back", NULL, "Next");
         }
 
-        screen_result = about_screens[screen_index](dialogs, message);
+        screen_result = of_screens[screen_index](dialogs, message);
 
         if(screen_result == DialogMessageButtonLeft) {
             if(screen_index <= 0) {
@@ -89,7 +89,7 @@ int32_t only_flipper_app(void* p) {
                 screen_index--;
             }
         } else if(screen_result == DialogMessageButtonRight) {
-            if(screen_index < about_screens_count) {
+            if(screen_index < of_screens_count) {
                 screen_index++;
             }
         } else if(screen_result == DialogMessageButtonBack) {
