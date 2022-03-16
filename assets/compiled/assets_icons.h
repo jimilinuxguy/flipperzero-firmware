@@ -3,6 +3,8 @@
 
 extern const Icon I_Certification1_103x23;
 extern const Icon I_Certification2_119x30;
+extern const Icon I_OF1_119x50;
+extern const Icon I_OF2_119x50;
 extern const Icon A_Levelup1_128x64;
 extern const Icon A_Levelup2_128x64;
 extern const Icon I_125_10px;
