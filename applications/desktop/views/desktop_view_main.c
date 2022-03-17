@@ -5,6 +5,8 @@
 #include <furi.h>
 #include <input/input.h>
 #include <dolphin/dolphin.h>
+#include <power/power_service/power.h>
+#include <power/power_service/power_i.h>
 
 #include "../desktop_i.h"
 #include "desktop_view_main.h"
@@ -51,6 +53,10 @@ bool desktop_main_input(InputEvent* event, void* context) {
     } else if(event->type == InputTypeLong) {
         if(event->key == InputKeyDown) {
             main_view->callback(DesktopMainEventOpenDebug, main_view->context);
+        }
+        else if(event->key == InputKeyBack) {
+            Power* power = furi_record_open("power");
+            power_off(power);
         }
     }
 
