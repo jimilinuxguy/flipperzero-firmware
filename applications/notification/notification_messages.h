@@ -91,6 +91,7 @@ extern const NotificationSequence sequence_set_only_blue_255;
 extern const NotificationSequence sequence_set_red_255;
 extern const NotificationSequence sequence_set_green_255;
 extern const NotificationSequence sequence_set_blue_255;
+extern const NotificationSequence sequence_set_magenta_255;
 
 // Blink
 extern const NotificationSequence sequence_blink_blue_10;

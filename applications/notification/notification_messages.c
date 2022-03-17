@@ -270,6 +270,13 @@ const NotificationSequence sequence_set_blue_255 = {
     NULL,
 };
 
+const NotificationSequence sequence_set_magenta_255 = {
+    &message_red_255,
+    &message_blue_255,
+    &message_do_not_reset,
+    NULL,
+};
+
 // Blink
 const NotificationSequence sequence_blink_blue_10 = {
     &message_blue_255,
