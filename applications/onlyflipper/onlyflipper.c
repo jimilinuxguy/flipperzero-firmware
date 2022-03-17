@@ -30,7 +30,7 @@ static DialogMessageButton product_screen(DialogsApp* dialogs, DialogMessage* me
 static DialogMessageButton icon1_screen(DialogsApp* dialogs, DialogMessage* message) {
     DialogMessageButton result;
 
-    dialog_message_set_icon(message, &I_OF1_119x50, 6, 0);
+    dialog_message_set_icon(message, &I_OF2_119x50, 6, 0);
     result = dialog_message_show(dialogs, message);
     dialog_message_set_icon(message, NULL, 0, 0);
 
