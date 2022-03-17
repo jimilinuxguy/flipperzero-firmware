@@ -8,11 +8,13 @@
 void vibrator_draw_callback(Canvas* canvas, void* ctx) {
     canvas_clear(canvas);
     canvas_set_font(canvas, FontPrimary);
-    canvas_draw_str(canvas, 2, 10, "Vibrator");
+    canvas_draw_str(canvas, 2, 10, "Vibrator w/ Patterns");
     canvas_set_font(canvas, FontSecondary);
-    canvas_draw_str(canvas, 2, 22, "OK toggles on vibro");
+    canvas_draw_str(canvas, 2, 22, "Ok for normal mode");
     canvas_set_font(canvas, FontSecondary);
-    canvas_draw_str(canvas, 2, 34, "L and R change pattern");
+    canvas_draw_str(canvas, 2, 34, "Left for pattern 1");
+    canvas_set_font(canvas, FontSecondary);
+    canvas_draw_str(canvas, 2, 46, "Right for pattern 2");
 }
 
 void vibrator_input_callback(InputEvent* input_event, void* ctx) {
@@ -34,24 +36,65 @@ int32_t vibrator_app(void* p) {
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     NotificationApp* notification = furi_record_open("notification");
-
     InputEvent event;
+    bool buttonToggle = 0;
 
     while(osMessageQueueGet(event_queue, &event, NULL, osWaitForever) == osOK) {
+
+        // Exit
         if(event.type == InputTypeShort && event.key == InputKeyBack) {
             notification_message(notification, &sequence_reset_vibro);
-            notification_message(notification, &sequence_reset_green);
             break;
         }
+
+        // Toggle On / Off
         if(event.key == InputKeyOk) {
-            if(event.type == InputTypePress) {
-                notification_message(notification, &sequence_set_vibro_on);
-                notification_message(notification, &sequence_set_green_255);
-            } else if(event.type == InputTypeRelease) {
-                notification_message(notification, &sequence_reset_vibro);
-                notification_message(notification, &sequence_reset_green);
+            if(event.type == InputTypeShort) {
+                if (!buttonToggle) {
+                    buttonToggle = 1;
+                    notification_message(notification, &sequence_set_vibro_on);
+                } else {
+                    buttonToggle = 0;
+                    notification_message(notification, &sequence_reset_vibro);
+                }
             }
         }
+
+        // Pattern 1
+        if(event.key == InputKeyLeft) {
+            if(event.type == InputTypeShort) {
+                if (!buttonToggle) {
+                    buttonToggle = 1;
+                    while(event.key != InputKeyOk) {
+                        notification_message(notification, &sequence_double_vibro);
+                        osDelay(600);
+                    }
+                } else {
+                    buttonToggle = 0;
+                    notification_message(notification, &sequence_reset_vibro);
+                }
+            }
+        }
+
+        // Pattern 2
+        if(event.key == InputKeyRight) {
+            if(event.type == InputTypeShort) {
+                if (!buttonToggle) {
+                    buttonToggle = 1;
+                    while(event.key != InputKeyOk) {
+                        notification_message(notification, &sequence_single_vibro);
+                        osDelay(300);
+                    }
+                } else {
+                    buttonToggle = 0;
+                    notification_message(notification, &sequence_reset_vibro);
+                }
+            }
+        }
+
+        // Pattern 3
+        // Pattern 4
+
     }
 
     gui_remove_view_port(gui, view_port);

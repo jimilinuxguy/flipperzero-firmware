@@ -35,6 +35,7 @@ APP_PASSPORT = 1
 
 # Plugins
 APP_MUSIC_PLAYER = 1
+APP_VIBRATOR = 1
 APP_SNAKE_GAME = 1
 
 # Debug
@@ -214,6 +215,12 @@ endif
 APP_SNAKE_GAME ?= 0
 ifeq ($(APP_SNAKE_GAME), 1)
 CFLAGS		+= -DAPP_SNAKE_GAME
+SRV_GUI		= 1
+endif
+
+APP_VIBRATOR ?= 0
+ifeq ($(APP_VIBRATOR), 1)
+CFLAGS		+= -DAPP_VIBRATOR
 SRV_GUI		= 1
 endif
 
