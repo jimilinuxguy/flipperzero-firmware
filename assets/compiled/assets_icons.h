@@ -3,8 +3,6 @@
 
 extern const Icon I_Certification1_103x23;
 extern const Icon I_Certification2_119x30;
-extern const Icon I_OF1_119x50;
-extern const Icon I_OF2_119x50;
 extern const Icon A_Levelup1_128x64;
 extern const Icon A_Levelup2_128x64;
 extern const Icon I_125_10px;
@@ -112,6 +110,8 @@ extern const Icon A_U2F_14;
 extern const Icon A_iButton_14;
 extern const Icon I_Detailed_chip_17x13;
 extern const Icon I_Medium_chip_22x21;
+extern const Icon I_OF1_119x50;
+extern const Icon I_OF2_119x50;
 extern const Icon I_Pin_arrow_down_7x9;
 extern const Icon I_Pin_arrow_left_9x7;
 extern const Icon I_Pin_arrow_right_9x7;
