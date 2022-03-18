@@ -54,12 +54,11 @@ int32_t vibrator_app(void* p) {
 
         // Slow (Left)
         if(event.key == InputKeyLeft) {
-            if(event.type == InputTypeShort) {
-                while(osMessageQueueGet(event_queue, &event, NULL, osWaitForever) == osOK) {
-                    if((event.key == InputKeyOk)) {
-                        break;
-                    }
-                    notification_message(notification, &sequence_single_vibro);
+            while(event.type == InputTypePress) {
+                notification_message(notification, &sequence_single_vibro);
+                if (event.type == InputTypeRelease) {
+                    break;
+                } else {
                     osDelay(300);
                 }
             }
@@ -70,7 +69,22 @@ int32_t vibrator_app(void* p) {
 
         // Fast (Right)
 
+        if(event.key == InputKeyRight) {
+            if(event.type == InputTypePress) {
+                    while(event.type != InputTypeRelease) {
+                        notification_message(notification, &sequence_single_vibro);
+                        if (event.key == InputKeyOk) {
+                            break;
+                        }
+                        else {
+                            osDelay(300);
+                        }
+                    }
 
+            } else if(event.type == InputTypeRelease) {
+                notification_message(notification, &sequence_reset_vibro);
+            }
+        }
 
         // Continuous (Down)
         if(event.key == InputKeyDown) {
