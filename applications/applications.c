@@ -38,6 +38,7 @@ extern int32_t scened_app(void* p);
 extern int32_t storage_test_app(void* p);
 extern int32_t subghz_app(void* p);
 extern int32_t usb_mouse_app(void* p);
+extern int32_t mouse_jiggler_app(void* p);
 extern int32_t usb_test_app(void* p);
 extern int32_t vibro_test_app(void* p);
 extern int32_t bt_hid_app(void* p);
@@ -220,6 +221,10 @@ const FlipperApplication FLIPPER_PLUGINS[] = {
 
 #ifdef APP_SNAKE_GAME
     {.app = snake_game_app, .name = "Snake Game", .stack_size = 1024, .icon = &A_Plugins_14},
+#endif
+
+#ifdef APP_MOUSE_JIGGLER
+    {.app = mouse_jiggler_app, .name = "Mouse Jiggler", .stack_size = 1024, .icon = NULL},
 #endif
 };
 
