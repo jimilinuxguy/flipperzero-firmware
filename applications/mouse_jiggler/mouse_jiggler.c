@@ -53,45 +53,22 @@ int32_t mouse_jiggler_app(void* p) {
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     UsbMouseEvent event;
-    bool status = 0;
+    //bool status = 0;
 
     while(1) {
         osStatus_t event_status = osMessageQueueGet(event_queue, &event, NULL, osWaitForever);
 
-        if (status) {
-            furi_hal_hid_mouse_move(MOUSE_MOVE_SHORT, 0);
-            osDelay(500);
-            furi_hal_hid_mouse_move(-MOUSE_MOVE_SHORT, 0);
-            osDelay(500);
+        furi_hal_hid_mouse_move(MOUSE_MOVE_SHORT, 0);
+        osDelay(500);
+        furi_hal_hid_mouse_move(-MOUSE_MOVE_SHORT, 0);
+        osDelay(500);
 
-        } else {
-            if(event_status == osOK) {
-                if(event.type == EventTypeInput) {
-                    if(event.input.type == InputTypeLong && event.input.key == InputKeyBack) {
-                        break;
-                    }
-
-                    if(event.input.key == InputKeyOk) {
-                        status = 1;
-                    }
-                }
-            }
-        }
-
-        if(event_status == osOK) {
+        if(event_status == osOK) { 
             if(event.type == EventTypeInput) {
-                if(event.input.type == InputTypeLong && event.input.key == InputKeyBack) {
+                if(event.input.key == InputKeyBack) {
                     break;
                 }
-
-                if(event.input.key == InputKeyOk) {
-                    status = 1;
-                }
             }
-        }
-
-        else {
-            // break?
         }
 
         view_port_update(view_port);
