@@ -40,6 +40,41 @@ int32_t vibrator_app(void* p) {
     int status = 0;
 
     while(osMessageQueueGet(event_queue, &event, NULL, osWaitForever) == osOK) {
+        
+        // Exit
+        if(event.key == InputKeyBack) {
+            notification_message(notification, &sequence_reset_vibro);
+            break;
+        }
+
+        // Toggle Off
+        if(event.key == InputKeyOk && event.type == InputTypeShort) {
+            status = 0;
+            notification_message(notification, &sequence_reset_vibro);
+        }
+
+        // Slow (Left)
+        if(event.key == InputKeyLeft && event.type == InputTypeShort) {
+            status = 1;
+        }
+
+        // Med (Up)
+        if(event.key == InputKeyUp && event.type == InputTypeShort) {
+            status = 2;
+        }
+
+        // Fast (Right)
+        if(event.key == InputKeyRight && event.type == InputTypeShort) {
+            status = 3;
+        }
+
+        // Continuous (Down)
+        if(event.key == InputKeyDown) {
+            if(event.type == InputTypeShort) {
+                status = 4;
+                notification_message(notification, &sequence_set_vibro_on);
+            }
+        }
 
         // Check for existing status
         // +==========================+
@@ -54,56 +89,22 @@ int32_t vibrator_app(void* p) {
             // keep waiting! 
         } else if (status == 1) {
             // slow
-            notification_message(notification, &sequence_set_vibro_on);
+            notification_message(notification, &sequence_single_vibro);
             osDelay(900);
         } else if (status == 2) {
             // med
-            notification_message(notification, &sequence_set_vibro_on);
+            notification_message(notification, &sequence_single_vibro);
             osDelay(600);
         } else if (status == 3) {
             // fast
-            notification_message(notification, &sequence_set_vibro_on);
+            notification_message(notification, &sequence_single_vibro);
             osDelay(300);
         } else if (status == 4) {
             // did this already
         } else {
             // This should never happen, as status will always be defined
         }
-        
-        // Exit
-        if(event.key == InputKeyBack) {
-            notification_message(notification, &sequence_reset_vibro);
-            break;
-        }
 
-        // Toggle Off
-        if(event.key == InputKeyOk) {
-            status = 0;
-            notification_message(notification, &sequence_reset_vibro);
-        }
-
-        // Slow (Left)
-        if(event.key == InputKeyLeft) {
-            status = 1;
-        }
-
-        // Med (Up)
-        if(event.key == InputKeyUp) {
-            status = 2;
-        }
-
-        // Fast (Right)
-        if(event.key == InputKeyRight) {
-            status = 3;
-        }
-
-        // Continuous (Down)
-        if(event.key == InputKeyDown) {
-            if(event.type == InputTypeShort) {
-                bool status = 4
-                notification_message(notification, &sequence_set_vibro_on);
-            }
-        }
     }
 
     gui_remove_view_port(gui, view_port);
