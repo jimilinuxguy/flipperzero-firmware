@@ -24,6 +24,7 @@ static void mouse_jiggler_render_callback(Canvas* canvas, void* ctx) {
     canvas_draw_str(canvas, 0, 10, "USB Mouse Jiggler");
 
     canvas_set_font(canvas, FontSecondary);
+    canvas_draw_str(canvas, 0, 51, "Hold [ok] to start");
     canvas_draw_str(canvas, 0, 63, "Hold [back] to exit");
 }
 
@@ -52,8 +53,28 @@ int32_t mouse_jiggler_app(void* p) {
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     UsbMouseEvent event;
+    bool status = 0;
+
     while(1) {
         osStatus_t event_status = osMessageQueueGet(event_queue, &event, NULL, osWaitForever);
+
+        if (status) {
+            furi_hal_hid_mouse_move(MOUSE_MOVE_SHORT, 0);
+            furi_hal_hid_mouse_move(-MOUSE_MOVE_SHORT, 0);
+
+        } else {
+            if(event_status == osOK) {
+                if(event.type == EventTypeInput) {
+                    if(event.input.type == InputTypeLong && event.input.key == InputKeyBack) {
+                        break;
+                    }
+
+                    if(event.input.key == InputKeyOk) {
+                        status = 1;
+                    }
+                }
+            }
+        }
 
         if(event_status == osOK) {
             if(event.type == EventTypeInput) {
@@ -61,52 +82,16 @@ int32_t mouse_jiggler_app(void* p) {
                     break;
                 }
 
-                if(event.input.type == InputTypeShort && event.input.key == InputKeyBack) {
-                    furi_hal_hid_mouse_press(HID_MOUSE_BTN_RIGHT);
-                    furi_hal_hid_mouse_release(HID_MOUSE_BTN_RIGHT);
-                }
-
                 if(event.input.key == InputKeyOk) {
-                    if(event.input.type == InputTypePress) {
-                        furi_hal_hid_mouse_press(HID_MOUSE_BTN_LEFT);
-                    } else if(event.input.type == InputTypeRelease) {
-                        furi_hal_hid_mouse_release(HID_MOUSE_BTN_LEFT);
-                    }
-                }
-
-                if(event.input.key == InputKeyRight) {
-                    if(event.input.type == InputTypePress) {
-                        furi_hal_hid_mouse_move(MOUSE_MOVE_SHORT, 0);
-                    } else if(event.input.type == InputTypeRepeat) {
-                        furi_hal_hid_mouse_move(MOUSE_MOVE_LONG, 0);
-                    }
-                }
-
-                if(event.input.key == InputKeyLeft) {
-                    if(event.input.type == InputTypePress) {
-                        furi_hal_hid_mouse_move(-MOUSE_MOVE_SHORT, 0);
-                    } else if(event.input.type == InputTypeRepeat) {
-                        furi_hal_hid_mouse_move(-MOUSE_MOVE_LONG, 0);
-                    }
-                }
-
-                if(event.input.key == InputKeyDown) {
-                    if(event.input.type == InputTypePress) {
-                        furi_hal_hid_mouse_move(0, MOUSE_MOVE_SHORT);
-                    } else if(event.input.type == InputTypeRepeat) {
-                        furi_hal_hid_mouse_move(0, MOUSE_MOVE_LONG);
-                    }
-                }
-
-                if(event.input.key == InputKeyUp) {
-                    if(event.input.type == InputTypePress) {
-                        furi_hal_hid_mouse_move(0, -MOUSE_MOVE_SHORT);
-                    } else if(event.input.type == InputTypeRepeat) {
-                        furi_hal_hid_mouse_move(0, -MOUSE_MOVE_LONG);
-                    }
+                    status = 1;
                 }
             }
         }
+
+        else {
+            // break?
+        }
+
         view_port_update(view_port);
     }
 
