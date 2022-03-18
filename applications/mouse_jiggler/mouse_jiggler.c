@@ -60,7 +60,9 @@ int32_t mouse_jiggler_app(void* p) {
 
         if (status) {
             furi_hal_hid_mouse_move(MOUSE_MOVE_SHORT, 0);
+            osDelay(500);
             furi_hal_hid_mouse_move(-MOUSE_MOVE_SHORT, 0);
+            osDelay(500);
 
         } else {
             if(event_status == osOK) {
