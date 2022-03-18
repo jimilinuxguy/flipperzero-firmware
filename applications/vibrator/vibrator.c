@@ -78,23 +78,23 @@ int32_t vibrator_app(void* p) {
 
         // Toggle Off
         if(event.key == InputKeyOk) {
-            mode = 0
+            status = 0;
             notification_message(notification, &sequence_reset_vibro);
         }
 
         // Slow (Left)
         if(event.key == InputKeyLeft) {
-            int status = 1
+            status = 1;
         }
 
         // Med (Up)
         if(event.key == InputKeyUp) {
-            int status = 2
+            status = 2;
         }
 
         // Fast (Right)
         if(event.key == InputKeyRight) {
-            int status = 3
+            status = 3;
         }
 
         // Continuous (Down)
