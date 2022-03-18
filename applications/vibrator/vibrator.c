@@ -37,58 +37,70 @@ int32_t vibrator_app(void* p) {
 
     NotificationApp* notification = furi_record_open("notification");
     InputEvent event;
-    //bool buttonToggle = 0;
+    int status = 0;
 
     while(osMessageQueueGet(event_queue, &event, NULL, osWaitForever) == osOK) {
 
+        // Check for existing status
+        // +==========================+
+        // | 0 - stopped              |
+        // | 1 - low                  |
+        // | 2 - med                  |
+        // | 3 - high                 |
+        // | 4 - continuous           |
+        // +==========================+
+
+        if (status == 0) {
+            // keep waiting! 
+        } else if (status == 1) {
+            // slow
+            notification_message(notification, &sequence_set_vibro_on);
+            osDelay(900);
+        } else if (status == 2) {
+            // med
+            notification_message(notification, &sequence_set_vibro_on);
+            osDelay(600);
+        } else if (status == 3) {
+            // fast
+            notification_message(notification, &sequence_set_vibro_on);
+            osDelay(300);
+        } else if (status == 4) {
+            // did this already
+        } else {
+            // This should never happen, as status will always be defined
+        }
+        
         // Exit
-        if(event.type == InputTypeShort && event.key == InputKeyBack) {
+        if(event.key == InputKeyBack) {
             notification_message(notification, &sequence_reset_vibro);
             break;
         }
 
         // Toggle Off
         if(event.key == InputKeyOk) {
+            mode = 0
             notification_message(notification, &sequence_reset_vibro);
         }
 
         // Slow (Left)
         if(event.key == InputKeyLeft) {
-            while(event.type == InputTypePress) {
-                notification_message(notification, &sequence_single_vibro);
-                if (event.type == InputTypeRelease) {
-                    break;
-                } else {
-                    osDelay(300);
-                }
-            }
+            int status = 1
         }
 
-        // Med (Top)
-
+        // Med (Up)
+        if(event.key == InputKeyUp) {
+            int status = 2
+        }
 
         // Fast (Right)
-
         if(event.key == InputKeyRight) {
-            if(event.type == InputTypePress) {
-                    while(event.type != InputTypeRelease) {
-                        notification_message(notification, &sequence_single_vibro);
-                        if (event.key == InputKeyOk) {
-                            break;
-                        }
-                        else {
-                            osDelay(300);
-                        }
-                    }
-
-            } else if(event.type == InputTypeRelease) {
-                notification_message(notification, &sequence_reset_vibro);
-            }
+            int status = 3
         }
 
         // Continuous (Down)
         if(event.key == InputKeyDown) {
             if(event.type == InputTypeShort) {
+                bool status = 4
                 notification_message(notification, &sequence_set_vibro_on);
             }
         }
