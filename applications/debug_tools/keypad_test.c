@@ -1,6 +1,7 @@
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
+#include <notification/notification_messages.h>
 
 #define TAG "KeypadTest"
 
@@ -62,6 +63,7 @@ static void keypad_test_input_callback(InputEvent* input_event, void* ctx) {
 int32_t keypad_test_app(void* p) {
     osMessageQueueId_t event_queue = osMessageQueueNew(32, sizeof(InputEvent), NULL);
     furi_check(event_queue);
+    NotificationApp* notification = furi_record_open("notification");
 
     KeypadTestState _state = {{false, false, false, false, false}, 0, 0, 0, 0, 0};
 
@@ -92,24 +94,30 @@ int32_t keypad_test_app(void* p) {
         if(event.key == InputKeyRight) {
             if(event.type == InputTypePress) {
                 state->press[0] = true;
+                notification_message(notification, &sequence_set_only_green_255);
             } else if(event.type == InputTypeRelease) {
                 state->press[0] = false;
+                notification_message(notification, &sequence_reset_green);
             } else if(event.type == InputTypeShort) {
                 ++state->right;
             }
         } else if(event.key == InputKeyLeft) {
             if(event.type == InputTypePress) {
                 state->press[1] = true;
+                notification_message(notification, &sequence_reset_red);
             } else if(event.type == InputTypeRelease) {
                 state->press[1] = false;
+                notification_message(notification, &sequence_reset_red);
             } else if(event.type == InputTypeShort) {
                 ++state->left;
             }
         } else if(event.key == InputKeyUp) {
             if(event.type == InputTypePress) {
                 state->press[2] = true;
+                notification_message(notification, &sequence_reset_blue);
             } else if(event.type == InputTypeRelease) {
                 state->press[2] = false;
+                notification_message(notification, &sequence_reset_blue);
             } else if(event.type == InputTypeShort) {
                 ++state->up;
             }
