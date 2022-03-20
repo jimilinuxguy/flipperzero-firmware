@@ -36,6 +36,7 @@ APP_PASSPORT = 1
 # Plugins
 APP_MUSIC_PLAYER = 1
 APP_SNAKE_GAME = 1
+APP_LEVEL_UP = 1
 
 # Debug
 APP_ACCESSOR = 1
@@ -214,6 +215,12 @@ endif
 APP_SNAKE_GAME ?= 0
 ifeq ($(APP_SNAKE_GAME), 1)
 CFLAGS		+= -DAPP_SNAKE_GAME
+SRV_GUI		= 1
+endif
+
+APP_LEVEL_UP ?= 0
+ifeq ($(APP_LEVEL_UP), 1)
+CFLAGS		+= -DAPP_LEVEL_UP
 SRV_GUI		= 1
 endif
 
