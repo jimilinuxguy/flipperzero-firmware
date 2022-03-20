@@ -7,10 +7,6 @@
 
 #include <stdio.h>
 #include "ble.h"
-#include <storage/storage.h>
-#include <lib/toolbox/path.h>
-#include <storage/storage_i.h>
-#include <storage/storage_message.h>
 
 #define TAG "FuriHalVersion"
 
@@ -264,50 +260,9 @@ const uint32_t furi_hal_version_get_hw_timestamp() {
     return furi_hal_version.timestamp;
 }
 
-// static bool name_check_asset() {
-//     Storage* fs_api = furi_record_open("storage");
-
-//     File* dir = storage_file_alloc(fs_api);
-//     bool ret = false;
-
-//     if(storage_dir_open(dir, "/any")) {
-//         ret = true;
-//     }
-
-//     storage_dir_close(dir);
-//     storage_file_free(dir);
-
-//     furi_record_close("storage");
-
-//     return ret;
-// }
-
 const char* furi_hal_version_get_name_ptr() {
     //return *furi_hal_version.name == 0x00 ? NULL : furi_hal_version.name;
-    //string_t filename;
-    //string_init(filename);
-    //filename[0] = "stuff";
-
-    bool ret = false;
-
-    FileInfo file_info;
-    Storage* fs_api = furi_record_open("storage");
-    File* directory = storage_file_alloc(fs_api);
-
-    if(storage_dir_read_name(dir, "/any")) {
-        ret = true;
-    }
-
-    storage_dir_close(dir);
-    storage_file_free(dir);
-
-    furi_record_close("storage");
-
-    //path_extract_filename_no_ext((char*)"/any/", (char*)"name.txt");
-    //strncpy(app->file_name, string_get_cstr(filename), 40);
-    //string_clear(filename);
-
-    return *furi_hal_version.name == 0x00 ? NULL : "Stuff";
+    return *furi_hal_version.name == 0x00 ? NULL : "Dumbass";
 }
 
 const char* furi_hal_version_get_device_name_ptr() {
