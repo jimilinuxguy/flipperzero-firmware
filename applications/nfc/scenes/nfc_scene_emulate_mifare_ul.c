@@ -5,6 +5,10 @@
 #define NFC_MF_UL_DATA_CHANGED (1UL)
 
 void nfc_emulate_mifare_ul_worker_callback(NfcWorkerEvent event, void* context) {
+<<<<<<< HEAD
+=======
+    UNUSED(event);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     Nfc* nfc = context;
 
     scene_manager_set_scene_state(

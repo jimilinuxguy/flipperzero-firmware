@@ -22,6 +22,13 @@
 #include "gate_tx.h"
 #include "raw.h"
 #include "firefly.h"
+<<<<<<< HEAD
+=======
+#include "secplus_v2.h"
+#include "secplus_v1.h"
+#include "megacode.h"
+#include "holtek.h"
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
 
 /**
  * Registration by name SubGhzProtocol.

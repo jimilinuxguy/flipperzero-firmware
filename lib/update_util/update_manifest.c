@@ -26,6 +26,10 @@ UpdateManifest* update_manifest_alloc() {
     string_init(update_manifest->staged_loader_file);
     string_init(update_manifest->resource_bundle);
     update_manifest->target = 0;
+<<<<<<< HEAD
+=======
+    update_manifest->manifest_version = 0;
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     memset(update_manifest->ob_reference.bytes, 0, FURI_HAL_FLASH_OB_RAW_SIZE_BYTES);
     memset(update_manifest->ob_compare_mask.bytes, 0, FURI_HAL_FLASH_OB_RAW_SIZE_BYTES);
     memset(update_manifest->ob_write_mask.bytes, 0, FURI_HAL_FLASH_OB_RAW_SIZE_BYTES);
@@ -49,12 +53,15 @@ static bool
     furi_assert(flipper_file);
 
     string_t filetype;
-    uint32_t version = 0;
 
     // TODO: compare filetype?
     string_init(filetype);
     update_manifest->valid =
+<<<<<<< HEAD
         flipper_format_read_header(flipper_file, filetype, &version) &&
+=======
+        flipper_format_read_header(flipper_file, filetype, &update_manifest->manifest_version) &&
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
         flipper_format_read_string(flipper_file, MANIFEST_KEY_INFO, update_manifest->version) &&
         flipper_format_read_uint32(
             flipper_file, MANIFEST_KEY_TARGET, &update_manifest->target, 1) &&
@@ -68,7 +75,11 @@ static bool
     string_clear(filetype);
 
     if(update_manifest->valid) {
+<<<<<<< HEAD
         /* Optional fields - we can have dfu, radio, or both */
+=======
+        /* Optional fields - we can have dfu, radio, resources, or any combination */
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
         flipper_format_read_string(
             flipper_file, MANIFEST_KEY_DFU_FILE, update_manifest->firmware_dfu_image);
         flipper_format_read_string(
@@ -131,8 +142,12 @@ static bool ob_data_check_masked_values_valid(
     const FuriHalFlashRawOptionByteData* mask) {
     bool valid = true;
     for(size_t idx = 0; valid && (idx < FURI_HAL_FLASH_OB_TOTAL_VALUES); ++idx) {
+<<<<<<< HEAD
         valid &= (data->obs[idx]. dword & mask->obs[idx].dword) ==
                  data->obs[idx].dword;
+=======
+        valid &= (data->obs[idx].dword & mask->obs[idx].dword) == data->obs[idx].dword;
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     }
     return valid;
 }

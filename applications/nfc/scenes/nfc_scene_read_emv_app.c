@@ -2,6 +2,10 @@
 #include <dolphin/dolphin.h>
 
 void nfc_read_emv_app_worker_callback(NfcWorkerEvent event, void* context) {
+<<<<<<< HEAD
+=======
+    UNUSED(event);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     Nfc* nfc = context;
     view_dispatcher_send_custom_event(nfc->view_dispatcher, NfcCustomEventWorkerExit);
 }

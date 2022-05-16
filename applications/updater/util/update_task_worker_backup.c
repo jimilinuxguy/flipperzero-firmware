@@ -27,7 +27,10 @@ static bool update_task_pre_update(UpdateTask* update_task) {
     path_concat(
         string_get_cstr(update_task->update_path), LFS_BACKUP_DEFAULT_FILENAME, backup_file_path);
 
+<<<<<<< HEAD
     update_task->state.total_stages = 1;
+=======
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     update_task_set_progress(update_task, UpdateTaskStageLfsBackup, 0);
     /* to avoid bootloops */
     furi_hal_rtc_set_boot_mode(FuriHalRtcBootModeNormal);
@@ -62,6 +65,7 @@ static bool update_task_post_update(UpdateTask* update_task) {
     string_t file_path;
     string_init(file_path);
 
+<<<<<<< HEAD
     /* status text is too long, too few stages to bother with a counter */
     update_task->state.total_stages = 0;
 
@@ -78,6 +82,19 @@ static bool update_task_post_update(UpdateTask* update_task) {
         CHECK_RESULT(lfs_backup_unpack(update_task->storage, string_get_cstr(file_path)));
 
         if(unpack_resources) {
+=======
+    TarArchive* archive = tar_archive_alloc(update_task->storage);
+    do {
+        path_concat(
+            string_get_cstr(update_task->update_path), LFS_BACKUP_DEFAULT_FILENAME, file_path);
+
+        update_task_set_progress(update_task, UpdateTaskStageLfsRestore, 0);
+        update_operation_disarm();
+
+        CHECK_RESULT(lfs_backup_unpack(update_task->storage, string_get_cstr(file_path)));
+
+        if(update_task->state.groups & UpdateTaskStageGroupResources) {
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
             TarUnpackProgress progress = {
                 .update_task = update_task,
                 .total_files = 0,
@@ -90,6 +107,7 @@ static bool update_task_post_update(UpdateTask* update_task) {
                 string_get_cstr(update_task->manifest->resource_bundle),
                 file_path);
 
+<<<<<<< HEAD
             TarArchive* archive = tar_archive_alloc(update_task->storage);
             tar_archive_set_file_callback(archive, update_task_resource_unpack_cb, &progress);
             success = tar_archive_open(archive, string_get_cstr(file_path), TAR_OPEN_MODE_READ);
@@ -100,10 +118,24 @@ static bool update_task_post_update(UpdateTask* update_task) {
                 }
             }
             tar_archive_free(archive);
+=======
+            tar_archive_set_file_callback(archive, update_task_resource_unpack_cb, &progress);
+            CHECK_RESULT(
+                tar_archive_open(archive, string_get_cstr(file_path), TAR_OPEN_MODE_READ));
+
+            progress.total_files = tar_archive_get_entries_count(archive);
+            if(progress.total_files > 0) {
+                CHECK_RESULT(tar_archive_unpack_to(archive, EXT_PATH));
+            }
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
         }
         success = true;
     } while(false);
 
+<<<<<<< HEAD
+=======
+    tar_archive_free(archive);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     string_clear(file_path);
     return success;
 }
@@ -116,6 +148,7 @@ int32_t update_task_worker_backup_restore(void* context) {
     FuriHalRtcBootMode boot_mode = furi_hal_rtc_get_boot_mode();
     if((boot_mode != FuriHalRtcBootModePreUpdate) && (boot_mode != FuriHalRtcBootModePostUpdate)) {
         /* no idea how we got here. Clear to normal boot */
+<<<<<<< HEAD
         furi_hal_rtc_set_boot_mode(FuriHalRtcBootModeNormal);
         return UPDATE_TASK_NOERR;
     }
@@ -128,6 +161,19 @@ int32_t update_task_worker_backup_restore(void* context) {
 
     /* Waiting for BT service to 'start', so we don't race for boot mode */
     furi_record_open("bt");
+=======
+        update_operation_disarm();
+        return UPDATE_TASK_NOERR;
+    }
+
+    if(!update_task_parse_manifest(update_task)) {
+        return UPDATE_TASK_FAILED;
+    }
+
+    /* Waiting for BT service to 'start', so we don't race for boot mode flag */
+    furi_record_open("bt");
+    furi_record_close("bt");
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
 
     if(boot_mode == FuriHalRtcBootModePreUpdate) {
         success = update_task_pre_update(update_task);
@@ -135,6 +181,7 @@ int32_t update_task_worker_backup_restore(void* context) {
         success = update_task_post_update(update_task);
     }
 
+<<<<<<< HEAD
     furi_record_close("bt");
 
     if(success) {
@@ -144,4 +191,13 @@ int32_t update_task_worker_backup_restore(void* context) {
     }
 
     return success ? UPDATE_TASK_NOERR : UPDATE_TASK_FAILED;
+=======
+    if(!success) {
+        update_task_set_progress(update_task, UpdateTaskStageError, 0);
+        return UPDATE_TASK_FAILED;
+    }
+
+    update_task_set_progress(update_task, UpdateTaskStageCompleted, 100);
+    return UPDATE_TASK_NOERR;
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
 }

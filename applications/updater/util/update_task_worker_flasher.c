@@ -111,6 +111,7 @@ static bool update_task_write_stack_data(UpdateTask* update_task) {
         }
 
         bytes_read = storage_file_read(update_task->file, fw_block, n_bytes_to_read);
+<<<<<<< HEAD
         if(bytes_read == 0) {
             break;
         }
@@ -124,6 +125,15 @@ static bool update_task_write_stack_data(UpdateTask* update_task) {
         if(!furi_hal_flash_program_page(i_page, fw_block, bytes_read)) {
             break;
         }
+=======
+        CHECK_RESULT(bytes_read != 0);
+
+        int16_t i_page =
+            furi_hal_flash_get_page_number(update_task->manifest->radio_address + element_offs);
+        CHECK_RESULT(i_page >= 0);
+
+        CHECK_RESULT(furi_hal_flash_program_page(i_page, fw_block, bytes_read));
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
 
         element_offs += bytes_read;
         update_task_set_progress(
@@ -142,6 +152,7 @@ static void update_task_wait_for_restart(UpdateTask* update_task) {
 
 static bool update_task_write_stack(UpdateTask* update_task) {
     bool success = false;
+<<<<<<< HEAD
     do {
         FURI_LOG_W(TAG, "Writing stack");
         update_task_set_progress(update_task, UpdateTaskStageRadioImageValidate, 0);
@@ -149,12 +160,26 @@ static bool update_task_write_stack(UpdateTask* update_task) {
         CHECK_RESULT(
             crc32_calc_file(update_task->file, &update_task_file_progress, update_task) ==
             update_task->manifest->radio_crc);
+=======
+    UpdateManifest* manifest = update_task->manifest;
+    do {
+        FURI_LOG_W(TAG, "Writing stack");
+        update_task_set_progress(update_task, UpdateTaskStageRadioImageValidate, 0);
+        CHECK_RESULT(update_task_open_file(update_task, manifest->radio_image));
+        CHECK_RESULT(
+            crc32_calc_file(update_task->file, &update_task_file_progress, update_task) ==
+            manifest->radio_crc);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
 
         CHECK_RESULT(update_task_write_stack_data(update_task));
         update_task_set_progress(update_task, UpdateTaskStageRadioInstall, 0);
         CHECK_RESULT(
+<<<<<<< HEAD
             ble_glue_fus_stack_install(update_task->manifest->radio_address, 0) !=
             BleGlueCommandResultError);
+=======
+            ble_glue_fus_stack_install(manifest->radio_address, 0) != BleGlueCommandResultError);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
         update_task_set_progress(update_task, UpdateTaskStageRadioInstall, 80);
         CHECK_RESULT(ble_glue_fus_wait_operation() == BleGlueCommandResultOK);
         update_task_set_progress(update_task, UpdateTaskStageRadioInstall, 100);
@@ -280,7 +305,10 @@ bool update_task_validate_optionbytes(UpdateTask* update_task) {
                               manifest->ob_write_mask.obs[idx].values.base) != 0;
 
             if(can_patch) {
+<<<<<<< HEAD
                 /* patch & restart loop */
+=======
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
                 const uint32_t patched_value =
                     /* take all non-writable bits from real value */
                     (device_ob_value & ~(manifest->ob_write_mask.obs[idx].values.base)) |
@@ -297,8 +325,12 @@ bool update_task_validate_optionbytes(UpdateTask* update_task) {
 
                 if(!is_fixed) {
                     /* Things are so bad that fixing what we are allowed to still doesn't match
+<<<<<<< HEAD
                      * reference value 
                      */
+=======
+                     * reference value */
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
                     FURI_LOG_W(
                         TAG,
                         "OB #%d is FUBAR (fixed&masked %08X, not %08X)",
@@ -317,11 +349,19 @@ bool update_task_validate_optionbytes(UpdateTask* update_task) {
         }
     }
     if(!match) {
+<<<<<<< HEAD
         update_task_set_progress(update_task, UpdateTaskStageOBError, 95);
     }
 
     if(ob_dirty) {
         FURI_LOG_W(TAG, "OB were changed, applying");
+=======
+        update_task_set_progress(update_task, UpdateTaskStageOBError, 0);
+    }
+
+    if(ob_dirty) {
+        FURI_LOG_W(TAG, "OBs were changed, applying");
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
         furi_hal_flash_ob_apply();
     }
     return match;
@@ -332,6 +372,7 @@ int32_t update_task_worker_flash_writer(void* context) {
     UpdateTask* update_task = context;
     bool success = false;
 
+<<<<<<< HEAD
     update_task->state.current_stage_idx = 0;
     update_task->state.total_stages = 0;
 
@@ -350,6 +391,20 @@ int32_t update_task_worker_flash_writer(void* context) {
 
         if(!string_empty_p(update_task->manifest->firmware_dfu_image)) {
             update_task->state.total_stages += 4;
+=======
+    do {
+        CHECK_RESULT(update_task_parse_manifest(update_task));
+
+        if(update_task->state.groups & UpdateTaskStageGroupRadio) {
+            CHECK_RESULT(update_task_manage_radiostack(update_task));
+        }
+
+        if(update_task->state.groups & UpdateTaskStageGroupOptionBytes) {
+            CHECK_RESULT(update_task_validate_optionbytes(update_task));
+        }
+
+        if(update_task->state.groups & UpdateTaskStageGroupFirmware) {
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
             CHECK_RESULT(update_task_write_dfu(update_task));
         }
 
@@ -359,5 +414,15 @@ int32_t update_task_worker_flash_writer(void* context) {
         success = true;
     } while(false);
 
+<<<<<<< HEAD
     return success ? UPDATE_TASK_NOERR : UPDATE_TASK_FAILED;
 }
+=======
+    if(!success) {
+        update_task_set_progress(update_task, UpdateTaskStageError, 0);
+        return UPDATE_TASK_FAILED;
+    }
+
+    return UPDATE_TASK_NOERR;
+}
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
