@@ -1,3 +1,7 @@
 #pragma once
 #define PROTOBUF_MAJOR_VERSION 0
+<<<<<<< HEAD
 #define PROTOBUF_MINOR_VERSION 6
+=======
+#define PROTOBUF_MINOR_VERSION 7
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68

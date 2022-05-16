@@ -37,4 +37,8 @@ void nfc_scene_delete_success_on_exit(void* context) {
 
     // Clear view
     popup_reset(nfc->popup);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68

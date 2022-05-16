@@ -17,6 +17,10 @@ static void nfc_cli_print_usage() {
 }
 
 static void nfc_cli_detect(Cli* cli, string_t args) {
+<<<<<<< HEAD
+=======
+    UNUSED(args);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     // Check if nfc worker is not busy
     if(furi_hal_nfc_is_busy()) {
         printf("Nfc is busy\r\n");
@@ -45,6 +49,10 @@ static void nfc_cli_detect(Cli* cli, string_t args) {
 }
 
 static void nfc_cli_emulate(Cli* cli, string_t args) {
+<<<<<<< HEAD
+=======
+    UNUSED(args);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     // Check if nfc worker is not busy
     if(furi_hal_nfc_is_busy()) {
         printf("Nfc is busy\r\n");
@@ -74,6 +82,10 @@ static void nfc_cli_emulate(Cli* cli, string_t args) {
 }
 
 static void nfc_cli_field(Cli* cli, string_t args) {
+<<<<<<< HEAD
+=======
+    UNUSED(args);
+>>>>>>> e46af576fc35ba848820936d2bafade579441d68
     // Check if nfc worker is not busy
     if(furi_hal_nfc_is_busy()) {
         printf("Nfc is busy\r\n");
@@ -95,6 +107,7 @@ static void nfc_cli_field(Cli* cli, string_t args) {
 }
 
 static void nfc_cli(Cli* cli, string_t args, void* context) {
+    UNUSED(context);
     string_t cmd;
     string_init(cmd);
 
