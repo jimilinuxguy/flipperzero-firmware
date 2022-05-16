@@ -148,7 +148,7 @@ static void bt_cli_command_packet_rx(Cli* cli, string_t args, void* context) {
 static void bt_cli_scan_callback(GapAddress address, void* context) {
     furi_assert(context);
     osMessageQueueId_t queue = context;
-    osMessageQueuePut(queue, &address, NULL, 250);
+    osMessageQueuePut(queue, &address, 0, 250);
 }
 
 static void bt_cli_command_scan(Cli* cli, string_t args, void* context) {
@@ -189,6 +189,8 @@ static void bt_cli_print_usage() {
 }
 
 static void bt_cli(Cli* cli, string_t args, void* context) {
+    furi_record_open("bt");
+
     string_t cmd;
     string_init(cmd);
     BtSettings bt_settings;
@@ -235,14 +237,13 @@ static void bt_cli(Cli* cli, string_t args, void* context) {
     }
 
     string_clear(cmd);
+    furi_record_close("bt");
 }
 
 void bt_on_system_start() {
 #ifdef SRV_CLI
     Cli* cli = furi_record_open("cli");
-    furi_record_open("bt");
     cli_add_command(cli, "bt", CliCommandFlagDefault, bt_cli, NULL);
-    furi_record_close("bt");
     furi_record_close("cli");
 #else
     UNUSED(bt_cli);
